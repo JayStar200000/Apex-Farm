@@ -1,9 +1,12 @@
 import socket
 import subprocess
 import time
+import win32gui
+import win32con
+import win32api
 
 # Client Configuration
-SERVER = "127.0.0.1"  # Replace with the server's IP address
+SERVER = "192.168.1.19"  # Replace with the server's IP address
 PORT = 12345
 
 def open_game():
@@ -40,6 +43,27 @@ def close_game():
     except Exception as e:
         return f"Unexpected error while closing game: {e}"
 
+def focus_game_window():
+    """Focus the Apex Legends game window."""
+    hwnd = win32gui.FindWindow(None, "Apex Legends")
+    if hwnd:
+        win32gui.SetForegroundWindow(hwnd)
+        return True
+    return False
+
+def ready_game():
+    """Focus the game and press the ready button to queue into a game."""
+    if focus_game_window():
+        time.sleep(2)  # Wait for 2 seconds to ensure the window is focused
+        # Move the mouse to the "ready" button position and click (example coordinates)
+        x, y = 960, 540  # Adjust these coordinates based on your screen resolution and button position
+        win32api.SetCursorPos((x, y))
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y, 0, 0)
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
+        return "Game is ready and queued successfully."
+    else:
+        return "Failed to focus the game window."
+
 def unknown_command(command):
     """Handle unknown commands."""
     return f"Unknown command: {command}"
@@ -52,6 +76,8 @@ def execute_command(command):
         return restart_game()
     elif command == "close_game":
         return close_game()
+    elif command == "ready_game":
+        return ready_game()
     else:
         return unknown_command(command)
 
@@ -88,6 +114,7 @@ def start_client():
     except Exception as e:
         print(f"[ERROR] {e}")
     finally:
+        time.sleep(3)  # Sleep for 3 seconds before closing the connection
         client.close()
         print("[DISCONNECTED] Connection closed.")
 

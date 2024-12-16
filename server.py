@@ -9,6 +9,16 @@ PORT = 12345
 clients = []
 ready_clients = []
 
+# Dictionary to store commands and their descriptions
+commands = {
+    "start": "Start the game on all clients.",
+    "restart": "Restart the game on all clients.",
+    "close": "Close the game on all clients.",
+    "ready_game": "Focus the game and press the ready button to queue into a game.",
+    "exit": "Shut down the server.",
+    "help": "Show this help message."
+}
+
 # Function to handle client connections
 def handle_client(client_socket, address):
     print(f"[NEW CONNECTION] {address} connected.")
@@ -56,10 +66,18 @@ def start_server():
 # Function to take commands from the server admin
 def command_input():
     while True:
-        command = input("Enter command ('quit' to stop): ")
-        if command.lower() == "quit":
+        command = input("Enter command ('exit' to stop , 'help' for help): ")
+        if command.lower() == "exit":
+            print("[SHUTTING DOWN] Server is shutting down.")
+            for client in clients:
+                client.close()
             break
-        broadcast_command(command)
+        elif command.lower() == "help":
+            print("Available commands:")
+            for cmd, desc in commands.items():
+                print(f"{cmd}: {desc}")
+        else:
+            broadcast_command(command)
 
 def wait_for_ready_clients():
     print("[WAITING] Waiting for all clients to be ready...")
