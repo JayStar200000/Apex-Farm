@@ -1,6 +1,6 @@
 # Apex Farm
 
-Apex Farm is a project designed to automate the control of the game Apex Legends on multiple PCs simultaneously. This project includes a server-client architecture where the server sends commands to clients to start, restart, and close the game. The clients execute these commands and send feedback to the server.
+Really early stage not really for release. Apex Farm is a project designed to automate the control of the game Apex Legends on multiple PCs simultaneously. This project includes a server-client architecture where the server sends commands to clients to start, restart, and close the game. The clients execute these commands and send feedback to the server.
 
 ## Features
 
